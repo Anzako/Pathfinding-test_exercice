@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
-    public Transform seeker, target;
+    //public Transform seeker, target;
     private NodeGrid grid;
+    public int actualCharacterNode = 0;
 
     private void Awake()
     {
@@ -14,7 +15,7 @@ public class Pathfinding : MonoBehaviour
 
     private void Update()
     {
-        FindPath(seeker.position, target.position);
+        //FindPath(seeker.position, target.position);
     }
 
     public void FindPath(Vector3 startPos, Vector3 targetPos)
@@ -94,5 +95,40 @@ public class Pathfinding : MonoBehaviour
             return 14 * dstY + 10 * (dstX - dstY);
         }
         return 14 * dstX + 10 * (dstY - dstX);
+    }
+    
+    public Vector2 GetActualMoveDirection()
+    {
+        return GetMoveDirection(grid.pathNodes[actualCharacterNode], grid.pathNodes[actualCharacterNode + 1]);
+    }
+
+    public Vector2 GetMoveDirection(Node nodeA, Node nodeB)
+    {
+        Vector2 direction = new Vector2(nodeB.worldPosition.x - nodeA.worldPosition.x, nodeB.worldPosition.z - nodeA.worldPosition.z);
+
+        return direction.normalized;
+    }
+
+    public bool IsNextNodeVisited(Vector3 position)
+    {
+        Node node = grid.NodeFromWorldPoint(position);
+
+        if (node != grid.pathNodes[actualCharacterNode] && node == grid.pathNodes[actualCharacterNode + 1])
+        {
+            actualCharacterNode += 1;
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsTargetNode(Vector3 position)
+    {
+        Node node = grid.NodeFromWorldPoint(position);
+
+        if (node == grid.pathNodes[grid.pathNodes.Count - 1])
+        {
+            return true;
+        }
+        return false;
     }
 }

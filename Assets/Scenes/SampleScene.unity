@@ -1063,6 +1063,7 @@ GameObject:
   - component: {fileID: 1752276766}
   - component: {fileID: 1752276765}
   - component: {fileID: 1752276764}
+  - component: {fileID: 1752276768}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1152,12 +1153,30 @@ Transform:
   m_GameObject: {fileID: 1752276763}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 2.05}
+  m_LocalPosition: {x: 0.432, y: 0.5, z: 1.571}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1752276768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752276763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a193dfb3eacaf3469374a88fa2e37cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 807811967}
+  movementDirection: {x: 0, y: 0}
+  speed: 5
+  agility: 2
+  endurance: 2
+  pathFinder: {fileID: 1897185474}
 --- !u!1 &1897185471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,8 +1240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c452fcca6617e647806b7e1e8d0a718, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seeker: {fileID: 1752276767}
-  target: {fileID: 807811967}
+  actualCharacterNode: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
