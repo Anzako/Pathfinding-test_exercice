@@ -634,7 +634,7 @@ Transform:
   m_GameObject: {fileID: 807811963}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.08, y: 0.5, z: 7.83}
+  m_LocalPosition: {x: -5.13, y: 1, z: 0.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1153,7 +1153,7 @@ Transform:
   m_GameObject: {fileID: 1752276763}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.432, y: 0.5, z: 1.571}
+  m_LocalPosition: {x: 6.01, y: 1, z: -6.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1171,12 +1171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a193dfb3eacaf3469374a88fa2e37cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 807811967}
-  movementDirection: {x: 0, y: 0}
-  speed: 5
-  agility: 2
-  endurance: 2
   pathFinder: {fileID: 1897185474}
+  target: {fileID: 807811967}
+  speed: 3
+  agility: 2
+  endurance: 4
+  timeToRest: 1
 --- !u!1 &1897185471
 GameObject:
   m_ObjectHideFlags: 0

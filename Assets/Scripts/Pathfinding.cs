@@ -81,6 +81,7 @@ public class Pathfinding : MonoBehaviour
             path.Add(currentNode);
             currentNode = currentNode.parent;
         }
+        path.Add(startNode);
         path.Reverse();
         grid.pathNodes = path;
     }
@@ -96,15 +97,16 @@ public class Pathfinding : MonoBehaviour
         }
         return 14 * dstX + 10 * (dstY - dstX);
     }
-    
-    public Vector2 GetActualMoveDirection()
+
+    public Vector3 GetActualMoveDirection()
     {
         return GetMoveDirection(grid.pathNodes[actualCharacterNode], grid.pathNodes[actualCharacterNode + 1]);
     }
 
-    public Vector2 GetMoveDirection(Node nodeA, Node nodeB)
+    public Vector3 GetMoveDirection(Node nodeA, Node nodeB)
     {
-        Vector2 direction = new Vector2(nodeB.worldPosition.x - nodeA.worldPosition.x, nodeB.worldPosition.z - nodeA.worldPosition.z);
+        Vector3 direction = nodeB.worldPosition - nodeA.worldPosition;
+        direction.y = 0;
 
         return direction.normalized;
     }
