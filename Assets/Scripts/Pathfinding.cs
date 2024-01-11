@@ -13,13 +13,9 @@ public class Pathfinding : MonoBehaviour
         grid = GetComponent<NodeGrid>();
     }
 
-    private void Update()
-    {
-        //FindPath(seeker.position, target.position);
-    }
-
     public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
+        actualCharacterNode = 0;
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
@@ -100,7 +96,11 @@ public class Pathfinding : MonoBehaviour
 
     public Vector3 GetActualMoveDirection()
     {
-        return GetMoveDirection(grid.pathNodes[actualCharacterNode], grid.pathNodes[actualCharacterNode + 1]);
+        if (actualCharacterNode != grid.pathNodes.Count)
+        {
+            return GetMoveDirection(grid.pathNodes[actualCharacterNode], grid.pathNodes[actualCharacterNode + 1]);
+        }
+        return Vector3.zero;
     }
 
     public Vector3 GetMoveDirection(Node nodeA, Node nodeB)

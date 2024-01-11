@@ -7,7 +7,7 @@ public class Character : MonoBehaviour
     // Pathfinding
     [SerializeField] private Pathfinding pathFinder;
     public Transform target;
-    bool findNewPath = true;
+    bool findNewPath = false;
     
     // Movement
     private enum State
@@ -70,9 +70,6 @@ public class Character : MonoBehaviour
 
                 break;
         }
-        
-     
-        
     }
 
     private void Move()
@@ -106,6 +103,7 @@ public class Character : MonoBehaviour
 
     private void FindNewPath()
     {
+        Debug.Log("DUPA");
         if (transform.position != target.position)
         {
             pathFinder.FindPath(transform.position, target.position);
@@ -142,6 +140,11 @@ public class Character : MonoBehaviour
             movementDirection = direction;
             isRotated = false;
         }
+    }
+
+    public void MoveToNewTarget()
+    {
+        findNewPath = true;
     }
 
 }
