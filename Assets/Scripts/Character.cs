@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    // Pathfinding
-    [SerializeField] private Pathfinding pathFinder;
-    public Transform target;
-    bool findNewPath = false;
+    [SerializeField] private Material material;
     
     // Movement
     private enum State
@@ -42,13 +39,32 @@ public class Character : MonoBehaviour
         switch (state)
         {
             case State.Idle:
-                if (findNewPath)
+                material.color = Color.red;
+                if (Input.GetMouseButtonDown(0))
                 {
-                    FindNewPath();
+                    // Rzutowanie promienia z kamery do punktu klikniêcia myszy
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                    // Deklaracja zmiennej do przechowywania informacji o trafionym obiekcie
+                    RaycastHit hit;
+
+                    // Sprawdzenie, czy promieñ trafia w jakiœ obiekt
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        // Pobranie pozycji trafionego obiektu
+                        Vector3 hitPoint = hit.point;
+
+                        // Wyœwietlenie informacji o trafieniu w konsoli (do celów testowych)
+                        Debug.Log("Klikniêto na obiekcie: " + hit.transform.name + " na pozycji: " + hitPoint);
+
+                        // Tutaj mo¿esz dodaæ w³asny kod obs³ugi klikniêcia w konkretny obiekt
+                        // np. wywo³uj¹c funkcjê na tym obiekcie, przekazuj¹c mu informacje o klikniêciu.
+                    }
                 }
                 break;
 
             case State.Move:
+                material.color = Color.green;
                 walkingTime += Time.deltaTime;
                 if (walkingTime >= endurance)
                 {
@@ -56,11 +72,11 @@ public class Character : MonoBehaviour
                     state = State.Rest;
                 }
                 Move();
-                CheckIsNextNodeVisited();
 
                 break;
 
             case State.Rest:
+                material.color = Color.yellow;
                 restingTime += Time.deltaTime;
                 if (restingTime >= timeToRest)
                 {
@@ -101,32 +117,6 @@ public class Character : MonoBehaviour
         
     }
 
-    private void FindNewPath()
-    {
-        Debug.Log("DUPA");
-        if (transform.position != target.position)
-        {
-            pathFinder.FindPath(transform.position, target.position);
-            movementDirection = pathFinder.GetActualMoveDirection();
-            transform.rotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-
-            findNewPath = false;
-            state = State.Move;
-        }
-    }
-
-    private void CheckIsNextNodeVisited()
-    {
-        if (pathFinder.IsTargetNode(transform.position))
-        {
-            state = State.Idle;
-            return;
-        } else if (pathFinder.IsNextNodeVisited(transform.position))
-        {
-            SetMovementDirection(pathFinder.GetActualMoveDirection());
-        }
-    }
-
     private float AngleBetween(Quaternion from, Quaternion to)
     {
         float angle = Quaternion.Angle(from, to);
@@ -142,9 +132,23 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void MoveToNewTarget()
+    public void ChangeToIdleState()
     {
-        findNewPath = true;
+        state = State.Idle;
     }
 
+    public void ChangeToMoveState()
+    {
+        state = State.Move;
+    }
+
+    public void ChangeToRestState()
+    {
+        state = State.Rest;
+    }
+
+    public void SetCharacterRotation(Vector3 rotation)
+    {
+        transform.rotation = Quaternion.LookRotation(rotation, Vector3.up);
+    }
 }

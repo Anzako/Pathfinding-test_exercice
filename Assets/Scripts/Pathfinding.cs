@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
-    //public Transform seeker, target;
-    private NodeGrid grid;
+    private NodeGrid nodeGrid;
+    private List<Node> pathNodes;
     public int actualCharacterNode = 0;
 
     private void Awake()
     {
-        grid = GetComponent<NodeGrid>();
+        nodeGrid = GetComponent<NodeGrid>();
     }
 
     public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
         actualCharacterNode = 0;
-        Node startNode = grid.NodeFromWorldPoint(startPos);
-        Node targetNode = grid.NodeFromWorldPoint(targetPos);
+        Node startNode = nodeGrid.NodeFromWorldPoint(startPos);
+        Node targetNode = nodeGrid.NodeFromWorldPoint(targetPos);
 
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();
@@ -43,7 +43,7 @@ public class Pathfinding : MonoBehaviour
                 return;
             }
 
-            foreach (Node neighbour in grid.GetNeighbours(currentNode))
+            foreach (Node neighbour in nodeGrid.GetNeighbours(currentNode))
             {
                 if (!neighbour.isWalkable || closedSet.Contains(neighbour))
                 {
@@ -79,7 +79,7 @@ public class Pathfinding : MonoBehaviour
         }
         path.Add(startNode);
         path.Reverse();
-        grid.pathNodes = path;
+        pathNodes = path;
     }
 
     int GetDistance(Node nodeA, Node nodeB)
@@ -96,9 +96,9 @@ public class Pathfinding : MonoBehaviour
 
     public Vector3 GetActualMoveDirection()
     {
-        if (actualCharacterNode != grid.pathNodes.Count)
+        if (actualCharacterNode != pathNodes.Count)
         {
-            return GetMoveDirection(grid.pathNodes[actualCharacterNode], grid.pathNodes[actualCharacterNode + 1]);
+            return GetMoveDirection(pathNodes[actualCharacterNode], pathNodes[actualCharacterNode + 1]);
         }
         return Vector3.zero;
     }
@@ -113,9 +113,9 @@ public class Pathfinding : MonoBehaviour
 
     public bool IsNextNodeVisited(Vector3 position)
     {
-        Node node = grid.NodeFromWorldPoint(position);
+        Node node = nodeGrid.NodeFromWorldPoint(position);
 
-        if (node != grid.pathNodes[actualCharacterNode] && node == grid.pathNodes[actualCharacterNode + 1])
+        if (node != pathNodes[actualCharacterNode] && node == pathNodes[actualCharacterNode + 1])
         {
             actualCharacterNode += 1;
             return true;
@@ -125,12 +125,34 @@ public class Pathfinding : MonoBehaviour
 
     public bool IsTargetNode(Vector3 position)
     {
-        Node node = grid.NodeFromWorldPoint(position);
+        Node node = nodeGrid.NodeFromWorldPoint(position);
 
-        if (node == grid.pathNodes[grid.pathNodes.Count - 1])
+        if (node == pathNodes[pathNodes.Count - 1])
         {
             return true;
         }
         return false;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position, new Vector3(nodeGrid.gridWorldSize.x, 1, nodeGrid.gridWorldSize.y));
+
+        if (nodeGrid.grid != null)
+        {
+            foreach(Node node in nodeGrid.grid)
+            {
+                Gizmos.color = node.isWalkable ? Color.white : Color.red;
+                if (pathNodes != null)
+                {
+                    if (pathNodes.Contains(node))
+                    {
+                        Gizmos.color = Color.green;
+                    }
+                }
+                Gizmos.DrawCube(node.worldPosition, Vector3.one * (nodeGrid.nodeDiameter - 0.1f));
+            }
+        }
+    }
+
 }

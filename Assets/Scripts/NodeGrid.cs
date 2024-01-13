@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class NodeGrid : MonoBehaviour
 {
-    public Transform player;
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
-    Node[,] grid;
+    public Node[,] grid;
 
-    float nodeDiameter;
-    int gridSizeX, gridSizeY;
-
-    public List<Node> pathNodes;
+    public float nodeDiameter;
+    public int gridSizeX, gridSizeY;
 
     private void Start()
     {
@@ -76,32 +73,4 @@ public class NodeGrid : MonoBehaviour
 
         return grid[x, y];
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
-
-        if (grid != null)
-        {
-            Node playerNode = NodeFromWorldPoint(player.position);
-            foreach(Node node in grid)
-            {
-                Gizmos.color = node.isWalkable ? Color.white : Color.red;
-                if (pathNodes != null)
-                {
-                    if (pathNodes.Contains(node))
-                    {
-                        Gizmos.color = Color.green;
-                    }
-                }
-
-                /*if (playerNode == node)
-                {
-                    Gizmos.color = Color.green;
-                }*/
-                Gizmos.DrawCube(node.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
-            }
-        }
-    }
-
 }
