@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] private Material material;
-    
+
     // Movement
     private enum State
     {
@@ -16,12 +16,14 @@ public class Character : MonoBehaviour
 
     private State state;
     private bool isRotated = true;
+    public bool isInTarget = false;
 
     private Vector3 movementDirection;
+    public Vector3 velocity;
 
-    [SerializeField] private float speed;
-    [SerializeField] private float agility;
-    [SerializeField] private float endurance;
+    [SerializeField] public float speed;
+    [SerializeField] public float agility;
+    [SerializeField] public float endurance;
     private float actualSpeed;
     private float walkingTime = 0;
     private float restingTime = 0;
@@ -39,28 +41,7 @@ public class Character : MonoBehaviour
         switch (state)
         {
             case State.Idle:
-                material.color = Color.red;
-                if (Input.GetMouseButtonDown(0))
-                {
-                    // Rzutowanie promienia z kamery do punktu klikniêcia myszy
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                    // Deklaracja zmiennej do przechowywania informacji o trafionym obiekcie
-                    RaycastHit hit;
-
-                    // Sprawdzenie, czy promieñ trafia w jakiœ obiekt
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        // Pobranie pozycji trafionego obiektu
-                        Vector3 hitPoint = hit.point;
-
-                        // Wyœwietlenie informacji o trafieniu w konsoli (do celów testowych)
-                        Debug.Log("Klikniêto na obiekcie: " + hit.transform.name + " na pozycji: " + hitPoint);
-
-                        // Tutaj mo¿esz dodaæ w³asny kod obs³ugi klikniêcia w konkretny obiekt
-                        // np. wywo³uj¹c funkcjê na tym obiekcie, przekazuj¹c mu informacje o klikniêciu.
-                    }
-                }
+                material.color = Color.white;
                 break;
 
             case State.Move:
@@ -94,6 +75,7 @@ public class Character : MonoBehaviour
         float velocity = actualSpeed * Time.deltaTime;
 
         transform.position += new Vector3(transform.forward.x * velocity, 0, transform.forward.z * velocity);
+        //transform.position += new Vector3(movementDirection.x * velocity, 0, movementDirection.z * velocity);
     }
 
     private void RotateToDirection()
@@ -139,7 +121,10 @@ public class Character : MonoBehaviour
 
     public void ChangeToMoveState()
     {
-        state = State.Move;
+        if (state != State.Rest)
+        {
+            state = State.Move;
+        }
     }
 
     public void ChangeToRestState()

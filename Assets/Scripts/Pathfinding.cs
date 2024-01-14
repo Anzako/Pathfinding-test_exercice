@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Pathfinding : MonoBehaviour
 {
     private NodeGrid nodeGrid;
     private List<Node> pathNodes;
     public int actualCharacterNode = 0;
+    public Transform target;
 
     private void Awake()
     {
@@ -134,25 +136,42 @@ public class Pathfinding : MonoBehaviour
         return false;
     }
 
+    public void ChangeTargetPosition(Vector3 pos)
+    {
+        Node node = nodeGrid.NodeFromWorldPoint(pos);
+        if (node != nodeGrid.NodeFromWorldPoint(target.position) && node.isWalkable)
+        {
+            target.position = pos;
+        }
+    }
+
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(nodeGrid.gridWorldSize.x, 1, nodeGrid.gridWorldSize.y));
-
-        if (nodeGrid.grid != null)
+        if (Application.isPlaying)
         {
-            foreach(Node node in nodeGrid.grid)
+            Gizmos.DrawWireCube(transform.position, new Vector3(nodeGrid.gridWorldSize.x, 1, nodeGrid.gridWorldSize.y));
+
+            if (nodeGrid.grid != null)
             {
-                Gizmos.color = node.isWalkable ? Color.white : Color.red;
-                if (pathNodes != null)
+                foreach (Node node in nodeGrid.grid)
                 {
-                    if (pathNodes.Contains(node))
+                    Gizmos.color = node.isWalkable ? Color.white : Color.red;
+                    if (pathNodes != null)
                     {
-                        Gizmos.color = Color.green;
+                        if (pathNodes.Contains(node))
+                        {
+                            Gizmos.color = Color.green;
+                        }
                     }
+                    if (node == nodeGrid.NodeFromWorldPoint(target.position))
+                    {
+                        Gizmos.color = Color.yellow;
+                    }
+                    Vector3 gizmosSize = new Vector3(nodeGrid.nodeDiameter - 0.1f, 0.05f, nodeGrid.nodeDiameter - 0.1f);
+                    Gizmos.DrawCube(node.worldPosition, gizmosSize);
                 }
-                Gizmos.DrawCube(node.worldPosition, Vector3.one * (nodeGrid.nodeDiameter - 0.1f));
             }
-        }
+        } 
     }
 
 }
