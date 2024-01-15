@@ -105,7 +105,7 @@ public class Pathfinding : MonoBehaviour
         return Vector3.zero;
     }
 
-    public Vector3 GetMoveDirection(Node nodeA, Node nodeB)
+    private Vector3 GetMoveDirection(Node nodeA, Node nodeB)
     {
         Vector3 direction = nodeB.worldPosition - nodeA.worldPosition;
         direction.y = 0;

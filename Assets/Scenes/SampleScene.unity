@@ -729,7 +729,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2176546064813443485, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: speed
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2176546064813443485, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: material
@@ -1655,7 +1655,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 557283799356174919, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.441
+      value: 6.241
       objectReference: {fileID: 0}
     - target: {fileID: 557283799356174919, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1663,7 +1663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 557283799356174919, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.04
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 557283799356174919, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1700,6 +1700,10 @@ PrefabInstance:
     - target: {fileID: 1225717903592826778, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: m_IsKinematic
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176546064813443485, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
+      propertyPath: speed
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2176546064813443485, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: material
@@ -1872,6 +1876,10 @@ PrefabInstance:
     - target: {fileID: 1225717903592826778, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: m_IsKinematic
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176546064813443485, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
+      propertyPath: speed
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2176546064813443485, guid: ffdd8ad46841eed47b0d399d53fb213a, type: 3}
       propertyPath: material

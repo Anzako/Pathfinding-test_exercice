@@ -18,16 +18,23 @@ public class Character : MonoBehaviour
     private bool isRotated = true;
     public bool isInTarget = false;
 
-    private Vector3 movementDirection;
     public Vector3 velocity;
 
     [SerializeField] public float speed;
     [SerializeField] public float agility;
     [SerializeField] public float endurance;
-    private float actualSpeed;
+    public float actualSpeed;
     private float walkingTime = 0;
     private float restingTime = 0;
     public float timeToRest;
+
+    public Vector3 position
+    {
+        get
+        {
+            return transform.position;
+        }
+    }
 
     private void Start()
     {
@@ -72,17 +79,15 @@ public class Character : MonoBehaviour
     private void Move()
     {
         RotateToDirection();
-        float velocity = actualSpeed * Time.deltaTime;
 
-        transform.position += new Vector3(transform.forward.x * velocity, 0, transform.forward.z * velocity);
-        //transform.position += new Vector3(movementDirection.x * velocity, 0, movementDirection.z * velocity);
+        transform.position += velocity * Time.deltaTime;
     }
 
     private void RotateToDirection()
     {
         if (!isRotated)
         {
-            Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+            Quaternion toRotation = Quaternion.LookRotation(velocity.normalized, Vector3.up);
             float angle = AngleBetween(transform.rotation, toRotation);
             if (angle > 5)
             {
@@ -105,13 +110,18 @@ public class Character : MonoBehaviour
         return Mathf.Abs(angle);
     }
 
-    public void SetMovementDirection(Vector3 direction)
+    public void SetVelocity(Vector3 velocity)
     {
-        if (movementDirection != direction)
+        if (transform.eulerAngles != velocity.normalized)
         {
-            movementDirection = direction;
+            this.velocity = velocity;
             isRotated = false;
         }
+    }
+
+    public void SetCharacterRotation(Vector3 rotation)
+    {
+        transform.rotation = Quaternion.LookRotation(rotation, Vector3.up);
     }
 
     public void ChangeToIdleState()
@@ -132,8 +142,5 @@ public class Character : MonoBehaviour
         state = State.Rest;
     }
 
-    public void SetCharacterRotation(Vector3 rotation)
-    {
-        transform.rotation = Quaternion.LookRotation(rotation, Vector3.up);
-    }
+    
 }
