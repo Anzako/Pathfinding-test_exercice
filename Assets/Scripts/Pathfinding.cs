@@ -96,18 +96,18 @@ public class Pathfinding : MonoBehaviour
         return 14 * dstX + 10 * (dstY - dstX);
     }
 
-    public Vector3 GetActualMoveDirection()
+    public Vector3 GetActualMoveDirection(Vector3 position)
     {
         if (actualCharacterNode != pathNodes.Count)
         {
-            return GetMoveDirection(pathNodes[actualCharacterNode], pathNodes[actualCharacterNode + 1]);
+            return GetMoveDirection(position, pathNodes[actualCharacterNode + 1]);
         }
         return Vector3.zero;
     }
 
-    private Vector3 GetMoveDirection(Node nodeA, Node nodeB)
+    private Vector3 GetMoveDirection(Vector3 positon, Node node)
     {
-        Vector3 direction = nodeB.worldPosition - nodeA.worldPosition;
+        Vector3 direction = node.worldPosition - positon;
         direction.y = 0;
 
         return direction.normalized;
@@ -119,8 +119,11 @@ public class Pathfinding : MonoBehaviour
 
         if (node != pathNodes[actualCharacterNode] && node == pathNodes[actualCharacterNode + 1])
         {
+            Vector3 pos = node.worldPosition;
+            //float distance = (pos - position).magnitude;
             actualCharacterNode += 1;
             return true;
+            
         }
         return false;
     }

@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Playables;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    [SerializeField] private Material material;
+    [SerializeField] private Material stateMaterial;
+    [SerializeField] public Material playerMaterial;
 
     // Movement
     private enum State
@@ -16,13 +18,12 @@ public class Character : MonoBehaviour
 
     private State state;
     private bool isRotated = true;
-    public bool isInTarget = false;
 
     public Vector3 velocity;
 
-    [SerializeField] public float speed;
-    [SerializeField] public float agility;
-    [SerializeField] public float endurance;
+    public float speed;
+    public float agility;
+    public float endurance;
     public float actualSpeed;
     private float walkingTime = 0;
     private float restingTime = 0;
@@ -38,6 +39,10 @@ public class Character : MonoBehaviour
 
     private void Start()
     {
+        speed = Random.Range(1, 6);
+        agility = Random.Range(1, 6);
+        endurance = Random.Range(1, 6);
+
         actualSpeed = speed;
         state = State.Idle;
     }
@@ -48,11 +53,11 @@ public class Character : MonoBehaviour
         switch (state)
         {
             case State.Idle:
-                material.color = Color.white;
+                stateMaterial.color = Color.white;
                 break;
 
             case State.Move:
-                material.color = Color.green;
+                stateMaterial.color = Color.green;
                 walkingTime += Time.deltaTime;
                 if (walkingTime >= endurance)
                 {
@@ -64,7 +69,7 @@ public class Character : MonoBehaviour
                 break;
 
             case State.Rest:
-                material.color = Color.yellow;
+                stateMaterial.color = Color.yellow;
                 restingTime += Time.deltaTime;
                 if (restingTime >= timeToRest)
                 {

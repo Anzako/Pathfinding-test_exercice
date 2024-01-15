@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 366286289698367217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.01, y: 1, z: -6.36}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 6.01, y: 0.5, z: -6.36}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5228452008522342408}
@@ -128,6 +128,7 @@ MonoBehaviour:
   speed: 3
   agility: 2
   endurance: 3
+  actualSpeed: 0
   timeToRest: 1
 --- !u!54 &1225717903592826778
 Rigidbody:

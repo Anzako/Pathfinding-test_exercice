@@ -15,8 +15,21 @@ public class CharactersController : MonoBehaviour
     // Pathfinding
     [SerializeField] private Pathfinding pathFinder;
     public Transform target;
-    bool movingToTarget = false;
     public LayerMask groundLayer;
+
+    private bool movingToTarget = false;
+    private bool guideInTarget = false;
+
+    // Leader Following
+    public float distanceBehind = 0.7f;
+    public float maxSeparation = 0.7f;
+    public float slowingRadius = 2f;
+    public float guideInTargetRange = 1.5f;
+
+    private void Start()
+    {
+        characters[guideID].playerMaterial.color = Color.blue;
+    }
 
     // Update is called once per frame
     void Update()
@@ -34,22 +47,23 @@ public class CharactersController : MonoBehaviour
 
     private void MoveCharacters()
     {
-        bool allCharactersInTarget = true;
-        CheckIsNextNodeVisited(characters[guideID]);
-        for (int i = 0; i < characters.Count; i++) 
-        { 
-            if (!characters[i].isInTarget)
-            {
-                allCharactersInTarget = false;
-                if (i != guideID)
-                {
-                    FollowGuideCharacter(characters[i]);
-                }
-            }
+        if (!guideInTarget)
+        {
+            CheckIsNextNodeVisited(characters[guideID]);
         }
-        if (allCharactersInTarget)
+        else if(CheckIfCharactersInTarget())
         {
             movingToTarget = false;
+            StopMovingCharacters();
+            return;
+        }
+
+        for (int i = 0; i < characters.Count; i++) 
+        { 
+            if (i != guideID)
+            {
+                FollowGuideCharacter(characters[i]);
+            }
         }
     }
 
@@ -57,13 +71,13 @@ public class CharactersController : MonoBehaviour
     {
         if (pathFinder.IsTargetNode(guideCharacter.position))
         {
-            guideCharacter.isInTarget = true;
+            guideInTarget = true;
             guideCharacter.ChangeToIdleState();
             return;
         }
         else if (pathFinder.IsNextNodeVisited(guideCharacter.position))
         {
-            guideCharacter.SetVelocity(pathFinder.GetActualMoveDirection() * guideCharacter.actualSpeed);
+            guideCharacter.SetVelocity(pathFinder.GetActualMoveDirection(guideCharacter.position) * guideCharacter.actualSpeed);
         }
     }
 
@@ -71,12 +85,34 @@ public class CharactersController : MonoBehaviour
     {
         if (transform.position != target.position)
         {
-            pathFinder.FindPath(characters[guideID].transform.position, target.position);
-            characters[guideID].SetVelocity(pathFinder.GetActualMoveDirection() * characters[guideID].actualSpeed);
-            characters[guideID].SetCharacterRotation(pathFinder.GetActualMoveDirection());
+            pathFinder.FindPath(characters[guideID].position, target.position);
+            characters[guideID].SetVelocity(pathFinder.GetActualMoveDirection(characters[guideID].position) * characters[guideID].actualSpeed);
+            characters[guideID].SetCharacterRotation(pathFinder.GetActualMoveDirection(characters[guideID].position));
 
+            guideInTarget = false;
             StartMovingCharacters();
         }
+    }
+
+    private bool CheckIfCharactersInTarget()
+    {
+        int charactersInTarget = 0;
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (i == guideID) continue;
+            Vector3 distanceToGuide = characters[guideID].position - characters[i].position;
+
+            if (distanceToGuide.magnitude <= guideInTargetRange)
+            {
+                charactersInTarget++;
+            }
+        }
+
+        if (charactersInTarget >= characters.Count - 1)
+        {
+            return true;
+        }
+        return false;
     }
 
     private void StartMovingCharacters()
@@ -84,26 +120,22 @@ public class CharactersController : MonoBehaviour
         for(int i = 0; i < characters.Count; i++)
         {
             characters[i].ChangeToMoveState();
-            characters[i].isInTarget = false;
+        }
+    }
+
+    private void StopMovingCharacters()
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            characters[i].ChangeToIdleState();
         }
     }
 
     private void FollowGuideCharacter(Character character)
     {
-        float distanceBehind = 1.2f;
         Vector3 v = characters[guideID].velocity * -1;
         v = v.normalized * distanceBehind;
         Vector3 behind = characters[guideID].position + v;
-
-        Vector3 distanceToGuide = characters[guideID].position - character.position;
-        if (characters[guideID].isInTarget)
-        {
-            if (distanceToGuide.magnitude <= 1.5f)
-            {
-                character.ChangeToIdleState();
-                character.isInTarget = true;
-            }
-        }
 
         Vector3 vel = computeArrive(character, behind);
         vel += computeSeparate(character);
@@ -115,7 +147,7 @@ public class CharactersController : MonoBehaviour
     {
         Vector3 v = new Vector3();
         int neighbourCount = 0;
-        float maxSeparation = 1.2f;
+        
 
         foreach (Character character in characters)
         {
@@ -147,7 +179,6 @@ public class CharactersController : MonoBehaviour
     {
         Vector3 desiredVelocity = behind - character.position;
         float distance = desiredVelocity.magnitude;
-        float slowingRadius = 2f;
 
         if (distance < slowingRadius)
         {
@@ -178,6 +209,13 @@ public class CharactersController : MonoBehaviour
             FindNewPath();
             movingToTarget = true;
         }
+    }
+
+    public void ChangeGuideCharacter(int value) 
+    {
+        characters[guideID].playerMaterial.color = Color.red;
+        guideID = value;
+        characters[guideID].playerMaterial.color = Color.blue;
     }
 
     public void ChangeTargetPosition()
