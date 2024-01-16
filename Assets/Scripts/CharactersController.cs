@@ -29,6 +29,17 @@ public class CharactersController : MonoBehaviour
     private void Start()
     {
         characters[guideID].playerMaterial.color = Color.blue;
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (i == guideID)
+            {
+                characters[i].playerMaterial.color = Color.blue;
+            } else
+            {
+                characters[i].playerMaterial.color = Color.red;
+            }
+            
+        }
     }
 
     // Update is called once per frame
